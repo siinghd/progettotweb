@@ -52,8 +52,9 @@ public class CorsoController {
                 System.out.println("Id non puo essere nullo, inserisci l'id");
             }else{
                 PreparedStatement pst = this.dao.getConn().prepareStatement(
-                        "DELETE FROM corso WHERE id=?");
-                pst.setInt(1,corso.getId());
+                        "UPDATE corso SET softdelete=? WHERE id=?");
+                pst.setInt(1,corso.getSoftdelete());
+                pst.setInt(2,corso.getId());
                 int rowsAffected = pst.executeUpdate();
                 if(rowsAffected>0){
                     System.out.println("Corso eliminato correttamente");
@@ -69,7 +70,7 @@ public class CorsoController {
             Statement st = this.dao.getConn().createStatement();
             ResultSet rs = st.executeQuery("SELECT * FROM corso");
             while (rs.next()) {
-                Corso p = new Corso(rs.getInt("id"), rs.getString("titolo"));
+                Corso p = new Corso(rs.getInt("id"), rs.getString("titolo") ,rs.getInt("softdelete"));
                 out.add(p);
             }
         } catch (SQLException e) {

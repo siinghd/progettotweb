@@ -44,7 +44,7 @@ public class Main {
                 case 2:
                     System.out.println("Inserisci Titolo");
                     String titolo = scan.nextLine();
-                    Corso c = new Corso(titolo);
+                    Corso c = new Corso(titolo,0);
                     corsoController.insertCorso(c);
                     break;
                 case 3:
@@ -53,7 +53,7 @@ public class Main {
                     String nome = scan.nextLine();
                     System.out.println("Inserisci cognome");
                     String cognome = scan.nextLine();
-                    Docente docente = new Docente(nome,cognome);
+                    Docente docente = new Docente(nome,cognome,0);
                     docenteController.insertDocente(docente);
                     break;
                 case 4:
@@ -75,7 +75,7 @@ public class Main {
                     }
                     int idcorso = scan.nextInt();
                     scan.nextLine();
-                    CorsoDocente cd = new CorsoDocente(corsi.get(idcorso).getId(),docen.get(iddoc).getId());
+                    CorsoDocente cd = new CorsoDocente(corsi.get(idcorso).getId(),docen.get(iddoc).getId(),corsi.get(idcorso).getSoftdelete());
                     corsoDocenteController.insertCorsoDocente(cd);
                 case 5:
                     ArrayList<Ripetizione> rip= ripetizioneController.queryDBRipetizioni();

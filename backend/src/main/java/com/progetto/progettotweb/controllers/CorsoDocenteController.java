@@ -32,9 +32,10 @@ public class CorsoDocenteController {
                 System.out.println("Id non puo essere nullo, inserisci l'id");
             }else{
                 PreparedStatement pst = this.dao.getConn().prepareStatement(
-                        "DELETE FROM corsodocente WHERE idcorso=? and iddocente=?");
-                pst.setInt(1,corsoDocente.getIdcorso());
-                pst.setInt(1,corsoDocente.getIddocente());
+                        "UPDATE corsodocente SET softdelete=? WHERE idcorso=? and iddocente=?");
+                pst.setInt(1,corsoDocente.getSoftdelete());
+                pst.setInt(2,corsoDocente.getIdcorso());
+                pst.setInt(3,corsoDocente.getIddocente());
 
                 int rowsAffected = pst.executeUpdate();
                 if(rowsAffected>0){

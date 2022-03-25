@@ -1,4 +1,4 @@
-package com.progetto.progettotweb.routes.auth;
+package com.progetto.progettotweb.routes;
 
 import com.google.gson.Gson;
 import com.progetto.progettotweb.controllers.DAO;
@@ -49,7 +49,7 @@ public class Login extends HttpServlet {
         Utente usr = user.get(0);
         if(BCrypt.checkpw(password,usr.getPassword())){
             usr.setPassword("");
-            request.getSession().setAttribute("user",user);
+            request.getSession().setAttribute("user",usr);
             printWriter.write("{\"status\":\"success\", \"message\":\"Autenticazione eseguita\",\"data\":"+gson.toJson(user)+"}");
             printWriter.close();
         }else{

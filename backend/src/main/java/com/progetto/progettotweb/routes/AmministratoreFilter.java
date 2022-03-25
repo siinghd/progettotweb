@@ -1,6 +1,7 @@
-package com.progetto.progettotweb.routes.auth;
+package com.progetto.progettotweb.routes;
 
 import com.progetto.progettotweb.models.Utente;
+import com.progetto.progettotweb.utils.ResponseToJson;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
@@ -15,10 +16,14 @@ public class AmministratoreFilter implements Filter {
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         HttpServletResponse response = (HttpServletResponse) servletResponse;
         HttpSession session = request.getSession(false);
-        Utente user = (Utente) session.getAttribute("user");
         PrintWriter printWriter = response.getWriter();
-        response.setContentType("application/json");
-        if (user.getRuolo()==3) {
+        if (session == null) {
+            printWriter.write(ResponseToJson.toJsonMessage("fail","Session non valida", "Session expired"));
+            printWriter.close();
+            return;
+        }
+        Utente user = (Utente) session.getAttribute("user");
+        if (user.getRuolo()==2) {
             filterChain.doFilter(request, response);
         } else {
             printWriter.write("{\"status\":\"fail\", \"message\":\"Accesso negato,devi essere amministratore\",\"error\":\"ACCESSDENIED\"}");

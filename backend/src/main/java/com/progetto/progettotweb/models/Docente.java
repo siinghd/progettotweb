@@ -8,16 +8,31 @@ public class Docente {
     private int id = -1;
     private String nome= null;
     private String cognome = null;
+    private int softdelete = 0;
 
     public Docente() {}
     public Docente(String nome, String cognome) {
         this.nome = nome;
         this.cognome = cognome;
     }
-    public Docente(int id, String nome, String cognome) {
+    public Docente(String nome, String cognome, int softdelete) {
+        this.nome = nome;
+        this.cognome = cognome;
+        this.softdelete = softdelete;
+    }
+    public Docente(int id, String nome, String cognome , int softdelete) {
         this.id = id;
         this.nome = nome;
         this.cognome = cognome;
+        this.softdelete = softdelete;
+    }
+
+    public int getSoftdelete() {
+        return softdelete;
+    }
+
+    public void setSoftdelete(int softdelete) {
+        this.softdelete = softdelete;
     }
 
     public int getId() {

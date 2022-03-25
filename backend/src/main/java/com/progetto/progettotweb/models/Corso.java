@@ -7,14 +7,19 @@ import java.sql.SQLException;
 public class Corso {
     private int id = -1;
     private String titolo= null;
+    private int softdelete = 0;
+
+
 
     public Corso() {}
-    public Corso(String titolo) {
+    public Corso(String titolo, int softdelete) {
         this.titolo = titolo;
+        this.softdelete = softdelete;
     }
-    public Corso(int id, String titolo) {
+    public Corso(int id, String titolo,int softdelete) {
         this.id = id;
         this.titolo = titolo;
+        this.softdelete = softdelete;
     }
 
     public int getId() {
@@ -33,6 +38,13 @@ public class Corso {
         this.titolo = titolo;
     }
 
+    public int getSoftdelete() {
+        return softdelete;
+    }
+
+    public void setSoftdelete(int softdelete) {
+        this.softdelete = softdelete;
+    }
     @Override
     public String toString() {
         return "Corso{" +

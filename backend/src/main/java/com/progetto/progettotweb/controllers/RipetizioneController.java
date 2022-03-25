@@ -106,8 +106,8 @@ public class RipetizioneController {
 
                     while (rs.next()) {
                         Docente p = new Docente(rs.getInt("iddocente"), rs.getString("nome"),
-                                rs.getString("cognome"));
-                        Corso c = new Corso(rs.getInt("cid"), rs.getString("titolo"));
+                                rs.getString("cognome"), rs.getInt("softdelete"));
+                        Corso c = new Corso(rs.getInt("cid"), rs.getString("titolo"),rs.getInt("softdelete"));
                         out.add(new Ripetizione(p, c, dateAvaible, j+":00 - "+(j+1)+":00",j+":00",1));
                     }
                 }

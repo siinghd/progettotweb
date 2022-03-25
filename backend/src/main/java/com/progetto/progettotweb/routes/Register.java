@@ -1,4 +1,4 @@
-package com.progetto.progettotweb.routes.auth;
+package com.progetto.progettotweb.routes;
 
 import com.google.gson.Gson;
 import com.progetto.progettotweb.controllers.UtenteController;
@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Locale;
 
 @WebServlet(name = "register", value = "/api/register")
 public class Register extends HttpServlet {
@@ -43,14 +44,14 @@ public class Register extends HttpServlet {
             return;
         }
         int ruolo = 1;
-        ArrayList<Utente> user  = utenteController.queryDBUtente("Select * from utente where accountname='"+email+"'");
+        ArrayList<Utente> user  = utenteController.queryDBUtente("Select * from utente where accountname='"+email.toLowerCase()+"'");
         if(user.size()>0){
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             printWriter.write("{\"status\":\"fail\", \"message\":\"Utente e gia presente con questa email\",\"error\":\"\"}");
             printWriter.close();
             return;
         }
-        String result = utenteController.insertUtente(new Utente(email,password, (byte) ruolo));
+        String result = utenteController.insertUtente(new Utente(email.toLowerCase(),password, (byte) ruolo));
         if(result.equals("ok")){
             response.setStatus(HttpServletResponse.SC_OK);
             printWriter.write("{\"status\":\"success\", \"message\":\"Registrazione eseguita\"}");

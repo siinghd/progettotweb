@@ -1,4 +1,4 @@
-package com.progetto.progettotweb.routes.auth;
+package com.progetto.progettotweb.routes;
 
 import com.google.gson.Gson;
 
