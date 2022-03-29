@@ -89,32 +89,32 @@
 </template>
 
 <script setup>
-import { defineEmits, shallowRef, ref } from 'vue';
-import AdminLayoutVue from '../../layouts/AdminLayout.vue';
-import { useQuery } from 'vue-query';
+import { defineEmits, shallowRef, ref } from "vue";
+import AdminLayoutVue from "../../layouts/AdminLayout.vue";
+import { useQuery } from "vue-query";
 import {
   genericGet,
   genericPost,
   genericDelete,
-} from '../../utilities/requests';
-import Loading from '../../components/Loading.vue';
-import Button from '../../components/Button.vue';
-import TableRow from '../../components/admin/docente/TableRow.vue';
-import { createToast } from 'mosha-vue-toastify';
+} from "../../utilities/requests";
+import Loading from "../../components/Loading.vue";
+import Button from "../../components/Button.vue";
+import TableRow from "../../components/admin/docente/DocenteTableRow.vue";
+import { createToast } from "mosha-vue-toastify";
 
 // starting
-const emit = defineEmits(['update:layout']);
-emit('update:layout', shallowRef(AdminLayoutVue));
+const emit = defineEmits(["update:layout"]);
+emit("update:layout", shallowRef(AdminLayoutVue));
 
 //variables
-const name = ref('');
-const lastname = ref('');
+const name = ref("");
+const lastname = ref("");
 
 //functions
 
 //prefecth
 const { isLoading, isError, data, error, refetch } = useQuery(
-  ['getProfessors'],
+  ["getProfessors"],
   () => genericGet(`${process.env.VUE_APP_BACKEND_URL}/api/auth/admin/docente`)
 );
 
@@ -124,11 +124,11 @@ const handleButtonSubmit = async (refetchf) => {
     `${process.env.VUE_APP_BACKEND_URL}/api/auth/admin/docente`,
     `name=${name.value}&lastname=${lastname.value}`
   );
-  if (res.status === 'success') {
-    createToast(res.message, { type: 'success' });
+  if (res.status === "success") {
+    createToast(res.message, { type: "success" });
     refetchf();
   } else {
-    createToast(res.message, { type: 'danger' });
+    createToast(res.message, { type: "danger" });
   }
 };
 
@@ -137,11 +137,11 @@ const handleOnDeleteSubmit = async (id, refetchf) => {
   const res = await genericDelete(
     `${process.env.VUE_APP_BACKEND_URL}/api/auth/admin/docente?id=${id}`
   );
-  if (res.status === 'success') {
-    createToast(res.message, { type: 'success' });
+  if (res.status === "success") {
+    createToast(res.message, { type: "success" });
     refetchf();
   } else {
-    createToast(res.message, { type: 'danger' });
+    createToast(res.message, { type: "danger" });
   }
 };
 

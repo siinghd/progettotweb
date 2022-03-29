@@ -69,18 +69,18 @@
   </div>
 </template>
 <script>
-import AuthLayoutVue from '../layouts/AuthLayout.vue';
-import { genericPost } from '../utilities/requests';
+import AuthLayoutVue from "../layouts/AuthLayout.vue";
+import { genericPost } from "../utilities/requests";
 export default {
   data() {
     return {
-      email: 'test@tester.com',
-      password: '123456',
+      email: "test@tester.com",
+      password: "123456",
       loading: false,
     };
   },
   created() {
-    this.$emit('update:layout', AuthLayoutVue);
+    this.$emit("update:layout", AuthLayoutVue);
   },
   methods: {
     handleSubmit() {
@@ -90,15 +90,15 @@ export default {
         `email=${this.email}&password=${this.password}`
       ).then((res) => {
         this.loading = false;
-        if (res.status === 'fail') {
-          this.$moshaToast(res.message, { type: 'danger' });
+        if (res.status === "fail") {
+          this.$moshaToast(res.message, { type: "danger" });
         } else {
-          this.$moshaToast(res.message, { type: 'success' });
-          this.$cookies.set('servletrole', res.data[0].ruolo);
+          this.$moshaToast(res.message, { type: "success" });
+          this.$cookies.set("servletrole", res.data[0].ruolo);
           if (res.data[0].ruolo === 3) {
-            this.$router.push('/auth/admin');
+            this.$router.push("/auth/admin");
           } else {
-            this.$router.push('/auth/user');
+            this.$router.push("/auth/user");
           }
         }
       });

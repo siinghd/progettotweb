@@ -70,18 +70,18 @@
 </template>
 
 <script>
-import AuthLayoutVue from '../layouts/AuthLayout.vue';
-import { genericPost } from '../utilities/requests';
+import AuthLayoutVue from "../layouts/AuthLayout.vue";
+import { genericPost } from "../utilities/requests";
 export default {
   data() {
     return {
-      email: '',
-      password: '',
+      email: "",
+      password: "",
       loading: false,
     };
   },
   created() {
-    this.$emit('update:layout', AuthLayoutVue);
+    this.$emit("update:layout", AuthLayoutVue);
   },
   methods: {
     handleSubmit() {
@@ -91,12 +91,12 @@ export default {
         `email=${this.email}&password=${this.password}`
       ).then((res) => {
         this.loading = false;
-        if (res.status === 'fail') {
-          this.$moshaToast(res.message, { type: 'danger' });
+        if (res.status === "fail") {
+          this.$moshaToast(res.message, { type: "danger" });
         } else {
-          this.$moshaToast(res.message, { type: 'success' });
+          this.$moshaToast(res.message, { type: "success" });
           setTimeout(() => {
-            this.$router.push('/');
+            this.$router.push("/");
           }, 2000);
         }
       });

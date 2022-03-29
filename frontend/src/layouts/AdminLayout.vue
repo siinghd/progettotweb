@@ -141,8 +141,8 @@
 </template>
 
 <script>
-import Loading from '../components/Loading.vue';
-import { genericGet } from '../utilities/requests';
+import Loading from "../components/Loading.vue";
+import { genericGet } from "../utilities/requests";
 export default {
   components: {
     Loading,
@@ -164,12 +164,12 @@ export default {
       genericGet(`${process.env.VUE_APP_BACKEND_URL}/api/signout`).then(
         (res) => {
           this.loading = false;
-          if (res.status === 'fail') {
-            this.$moshaToast(res.message, { type: 'danger' });
+          if (res.status === "fail") {
+            this.$moshaToast(res.message, { type: "danger" });
           } else {
-            this.$cookies.remove('servletrole');
-            this.$moshaToast(res.message, { type: 'success' });
-            this.$router.push('/');
+            this.$cookies.remove("servletrole");
+            this.$moshaToast(res.message, { type: "success" });
+            this.$router.push("/");
           }
         }
       );

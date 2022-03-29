@@ -6,7 +6,7 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "lintfix": "vue-cli-service lint --fix"
+    "lint:fix": "vue-cli-service lint --fix"
   },
   "dependencies": {
     "@tailwindcss/postcss7-compat": "^2.2.17",

@@ -11,7 +11,7 @@ public class CorsoController {
         this.dao = DAO.Singleton();
     }
 
-    public void insertCorso(Corso corso) {
+    public String insertCorso(Corso corso) {
         try {
             PreparedStatement pst = this.dao.getConn().prepareStatement(
                     "INSERT INTO corso (titolo) values(?)");
@@ -21,9 +21,10 @@ public class CorsoController {
             if(rowsAffected>0){
                 System.out.println("Corso inserito correttamente");
             }
+            return "ok";
         } catch (SQLException e) {
             System.out.println(e.getMessage());
-
+            return e.getMessage();
         }
     }
     public void updateCorso(Corso corso) {
@@ -46,7 +47,7 @@ public class CorsoController {
 
         }
     }
-    public void deleteCorso(Corso corso) {
+    public String deleteCorso(Corso corso) {
         try {
             if(corso.getId()==-1){
                 System.out.println("Id non puo essere nullo, inserisci l'id");
@@ -60,15 +61,31 @@ public class CorsoController {
                     System.out.println("Corso eliminato correttamente");
                 }
             }
+            return "ok";
         } catch (SQLException e) {
             System.out.println(e.getMessage());
+            return e.getMessage();
         }
     }
     public ArrayList<Corso> queryDBCorso() {
         ArrayList<Corso> out = new ArrayList<>();
         try {
             Statement st = this.dao.getConn().createStatement();
-            ResultSet rs = st.executeQuery("SELECT * FROM corso");
+            ResultSet rs = st.executeQuery("SELECT * FROM corso where softdelete=0");
+            while (rs.next()) {
+                Corso p = new Corso(rs.getInt("id"), rs.getString("titolo") ,rs.getInt("softdelete"));
+                out.add(p);
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return out;
+    }
+    public ArrayList<Corso> queryDBCorsoByName(String name) {
+        ArrayList<Corso> out = new ArrayList<>();
+        try {
+            Statement st = this.dao.getConn().createStatement();
+            ResultSet rs = st.executeQuery("SELECT * FROM corso where softdelete=0 AND titolo='"+name+"'");
             while (rs.next()) {
                 Corso p = new Corso(rs.getInt("id"), rs.getString("titolo") ,rs.getInt("softdelete"));
                 out.add(p);
