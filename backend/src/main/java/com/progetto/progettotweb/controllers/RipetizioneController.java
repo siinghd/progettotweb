@@ -15,27 +15,29 @@ public class RipetizioneController {
         this.dao = DAO.Singleton();
     }
 
-    public void insertRipetizione(Ripetizione ripetizione) {
+    public String insertRipetizione(Ripetizione ripetizione) {
         System.out.println(this.toString());
         try {
             if(ripetizione.getIdutente()==-1){
                 System.out.println("Nessun id utente presente");
-                return;
+                return "fail";
             }
             PreparedStatement pst = this.dao.getConn().prepareStatement(
-                    "INSERT INTO ripetizione (idcorso,iddocente,idutente,data,ora) values(?,?,?,?,?)");
-            pst.setInt(1,ripetizione.getCorso().getId());
-            pst.setInt(2,ripetizione.getDoc().getId());
+                    "INSERT INTO ripetizione (idcorso,iddocente,idutente,data,ora,status) values(?,?,?,?,?,?)");
+            pst.setInt(1,ripetizione.getIdcorso());
+            pst.setInt(2,ripetizione.getIddoc());
             pst.setInt(3,ripetizione.getIdutente());
             pst.setString(4,ripetizione.getDate());
-            pst.setString(5,ripetizione.getActualTime());
+            pst.setString(5,ripetizione.getTime());
+            pst.setInt(6,ripetizione.getStatus());
 
             int rowsAffected = pst.executeUpdate();
             if(rowsAffected>0){
                 System.out.println("Ripetizione inserita correttamente");
             }
+            return "ok";
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            return e.getMessage();
 
         }
     }
@@ -46,7 +48,7 @@ public class RipetizioneController {
             }else{
 
                 PreparedStatement pst = this.dao.getConn().prepareStatement(
-                        "UPDATE ripetizione SET idcorso=?,iddocente=? ,idutente=?,data=?,ora=?,status=?WHERE id=?");
+                        "UPDATE ripetizione SET idcorso=?,iddocente=?,idutente=?,data=?,ora=?,status=?WHERE id=?");
                 pst.setInt(1,ripetizione.getCorso().getId());
                 pst.setInt(2,ripetizione.getDoc().getId());
                 pst.setInt(3,ripetizione.getIdutente());
@@ -66,25 +68,29 @@ public class RipetizioneController {
 
         }
     }
-    public void deleteRipetizione(Ripetizione ripetizione) {
+    public String deleteRipetizione(int id) {
         try {
-            if(ripetizione.getId()==-1){
+            if(id==-1){
                 System.out.println("Id non puo essere nullo, inserisci l'id");
+                return "Id non puo essere nullo, inserisci l'id";
             }else{
                 PreparedStatement pst = this.dao.getConn().prepareStatement(
                         "DELETE FROM ripetizione WHERE id=?");
-                pst.setInt(1,ripetizione.getId());
+                pst.setInt(1,id);
                 int rowsAffected = pst.executeUpdate();
                 if(rowsAffected>0){
                     System.out.println("Ripetizione eliminato correttamente");
                 }
+                return "ok";
             }
+
         } catch (SQLException e) {
             System.out.println(e.getMessage());
+            return e.getMessage();
         }
     }
 
-    public ArrayList<Ripetizione> queryDBRipetizioni() {
+    public ArrayList<Ripetizione> queryDBRipetizioniDisponibili() {
         ArrayList<Ripetizione> out = new ArrayList<>();
         ArrayList<String> days = Utils.getDates();
         int startingtime= 15;
@@ -95,13 +101,15 @@ public class RipetizioneController {
                 String[] split = days.get(i).split("-");
                 String dateAvaible = split[2] + "-" + split[1] + "-" + split[0];
                 for (int j = startingtime; j < endtime; j++) {
-                    ResultSet rs = st.executeQuery("SELECT c.id as cid , d.id AS did , d.nome , d.cognome , c.titolo , idcorso , iddocente FROM corsodocente as cd " +
+                    ResultSet rs = st.executeQuery("SELECT c.id as cid , d.id AS did , d.nome , d.cognome , c.titolo , idcorso , iddocente , c.softdelete , d.softdelete  FROM corsodocente as cd " +
                             "JOIN corso as c ON cd.idcorso=c.id " +
                             "JOIN docente as d ON cd.iddocente= d.id " +
-                            "WHERE NOT EXISTS " +
+                            "WHERE c.softdelete = 0 AND d.softdelete = 0 AND NOT EXISTS " +
                             "(SELECT * from ripetizione as r " +
                             "WHERE r.idcorso = cd.idcorso AND r.iddocente = cd.iddocente AND data='"+dateAvaible +
-                            "' AND ora='"+j+":00' )");
+                            "' AND ora='"+j+":00' ) ") ;
+
+
 
 
                     while (rs.next()) {
@@ -112,6 +120,31 @@ public class RipetizioneController {
                     }
                 }
             }
+
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+
+        return out;
+    }
+
+    public ArrayList<Ripetizione> queryDBRipetizioniNonDisponibili() {
+        ArrayList<Ripetizione> out = new ArrayList<>();
+
+
+        try {
+            Statement st = this.dao.getConn().createStatement();
+
+            ResultSet rs = st.executeQuery("SELECT r.id , r.iddocente , r.idcorso , r.data , r.ora , r.status , r.idutente , c.titolo , d.nome , d.cognome , d.softdelete , c.sofdelete from ripetizione as r " +
+                                                    " JOIN corso as c ON r.idcorso = c.id" +
+                                                    " JOIN docente as d ON r.iddocente = d.id");
+            while (rs.next()) {
+                Docente p = new Docente(rs.getInt("iddocente"), rs.getString("nome"),
+                        rs.getString("cognome"), rs.getInt("softdelete"));
+                Corso c = new Corso(rs.getInt("cid"), rs.getString("titolo"),rs.getInt("softdelete"));
+                out.add(new Ripetizione(p, c, rs.getString("data"), rs.getString("ora"),rs.getInt("idutente"), "15:00",rs.getInt("status")));
+            }
+
 
         } catch (SQLException e) {
             System.out.println(e.getMessage());

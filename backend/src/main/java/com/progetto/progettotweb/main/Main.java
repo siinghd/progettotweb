@@ -19,7 +19,7 @@ public class Main {
             int selected = -1;
             while(selected==-1){
                 System.out.println("Scegli un'opzione");
-                System.out.println(" 1 - crea utente.");
+
                 System.out.println(" 2 - crea corso");
                 System.out.println(" 3 - crea docente");
                 System.out.println(" 4 - crea ripetizione");
@@ -78,14 +78,14 @@ public class Main {
                     CorsoDocente cd = new CorsoDocente(corsi.get(idcorso).getId(),docen.get(iddoc).getId(),corsi.get(idcorso).getSoftdelete());
                     corsoDocenteController.insertCorsoDocente(cd);
                 case 5:
-                    ArrayList<Ripetizione> rip= ripetizioneController.queryDBRipetizioni();
+                    ArrayList<Ripetizione> rip= ripetizioneController.queryDBRipetizioniDisponibili();
                     for (int j = 0; j < rip.size(); j++) {
                         System.out.println(j + "-> "+rip.get(j).toString());
                     }
                     break;
                 case 6:
                     System.out.println("Scegli una ripetizione inserento il numero");
-                    ArrayList<Ripetizione> rip2= ripetizioneController.queryDBRipetizioni();
+                    ArrayList<Ripetizione> rip2= ripetizioneController.queryDBRipetizioniDisponibili();
                     for (int j = 0; j < rip2.size(); j++) {
                         System.out.println(j + "-> "+rip2.get(j).toString());
                     }

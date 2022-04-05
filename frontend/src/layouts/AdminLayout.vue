@@ -66,7 +66,14 @@
                   to="/auth/admin/bookings"
                   class="text-white px-3 py-2 rounded-md text-sm font-medium"
                   aria-current="page"
-                  >Prenotazioni</router-link
+                  >Prenotazioni Disponibili</router-link
+                >
+
+                <router-link
+                  to="/auth/admin/PrenotazioniEffettuate"
+                  class="text-white px-3 py-2 rounded-md text-sm font-medium"
+                  aria-current="page"
+                  >Prenotazioni Effettuate</router-link
                 >
 
                 <router-link
@@ -111,7 +118,14 @@
             to="/auth/admin/bookings"
             class="text-white block px-3 py-2 rounded-md text-base font-medium"
             aria-current="page"
-            >Prenotazioni</router-link
+            >Prenotazioni Disponibili</router-link
+          >
+
+          <router-link
+            to="/auth/admin/PrenotazioniEffettuate"
+            class="text-white block px-3 py-2 rounded-md text-base font-medium"
+            aria-current="page"
+            >Prenotazioni Effettuate</router-link
           >
 
           <router-link

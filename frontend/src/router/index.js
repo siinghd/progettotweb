@@ -6,6 +6,7 @@ import Courses from "../views/admin/Courses.vue";
 import Bookings from "../views/admin/Bookings.vue";
 import Professors from "../views/admin/Professors.vue";
 import Subjects from "../views/admin/Subjects.vue";
+import PrenotazioniEffettuate from "../views/admin/PrenotazioniEffettuate.vue";
 
 import HomePageUser from "../views/user/HomePageUser.vue";
 import { useCookies } from "vue3-cookies";
@@ -48,6 +49,15 @@ const routes = [
     path: "/auth/admin/bookings",
     name: "Bookings",
     component: Bookings,
+    meta: {
+      auth: true,
+      role: 2,
+    },
+  },
+  {
+    path: "/auth/admin/PrenotazioniEffettuate",
+    name: "PrenotazioniDisponibili",
+    component: PrenotazioniEffettuate,
     meta: {
       auth: true,
       role: 2,

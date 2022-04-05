@@ -7,6 +7,8 @@ import java.sql.SQLException;
 public class Ripetizione {
     private int id = -1;
     private Docente doc= null;
+    private int iddoc = -1;
+    private int idcorso = -1;
     private Corso corso = null;
     private String date = null;
     private String actualTime = null;
@@ -21,6 +23,15 @@ public class Ripetizione {
         this.date = date;
         this.time = time;
         this.actualTime = actualTime;
+        this.status= status;
+    }
+    public Ripetizione(int iddoc, int idcorso, int idutente, String date, String time, int status) {
+
+        this.iddoc = iddoc;
+        this.idcorso = idcorso;
+        this.date = date;
+        this.time = time;
+        this.idutente = idutente;
         this.status= status;
     }
     public Ripetizione(int id , Docente doc, Corso corso, String date, String time ,int idutente,String actualTime,int status) {
@@ -97,9 +108,18 @@ public class Ripetizione {
     public void setIdutente(int idutente) {
         this.idutente = idutente;
     }
+
     public int getStatus() {
         return status;
     }
+
+    public int getIddoc() {return iddoc;}
+
+    public void setIddoc(int iddoc) {this.iddoc = iddoc;}
+
+    public int getIdcorso() {return idcorso;}
+
+    public void setIdcorso(int idcorso) {this.idcorso = idcorso;}
 
     public void setStatus(int status) {
         this.status = status;
