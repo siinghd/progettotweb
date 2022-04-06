@@ -128,21 +128,22 @@ public class RipetizioneController {
         return out;
     }
 
-    public ArrayList<Ripetizione> queryDBRipetizioniNonDisponibili() {
+    public ArrayList<Ripetizione> queryDBRipetizioniPrenotate(int id) {
         ArrayList<Ripetizione> out = new ArrayList<>();
 
 
         try {
             Statement st = this.dao.getConn().createStatement();
 
-            ResultSet rs = st.executeQuery("SELECT r.id , r.iddocente , r.idcorso , r.data , r.ora , r.status , r.idutente , c.titolo , d.nome , d.cognome , d.softdelete , c.sofdelete from ripetizione as r " +
+            ResultSet rs = st.executeQuery("SELECT r.id , r.id , r.iddocente , r.idcorso as cid , r.data , r.ora , r.status , r.idutente , c.titolo , d.nome , d.cognome , d.softdelete , c.softdelete from ripetizione as r " +
                                                     " JOIN corso as c ON r.idcorso = c.id" +
-                                                    " JOIN docente as d ON r.iddocente = d.id");
+                                                    " JOIN docente as d ON r.iddocente = d.id" +
+                                                    " WHERE r.idutente = " + id );
             while (rs.next()) {
                 Docente p = new Docente(rs.getInt("iddocente"), rs.getString("nome"),
                         rs.getString("cognome"), rs.getInt("softdelete"));
                 Corso c = new Corso(rs.getInt("cid"), rs.getString("titolo"),rs.getInt("softdelete"));
-                out.add(new Ripetizione(p, c, rs.getString("data"), rs.getString("ora"),rs.getInt("idutente"), "15:00",rs.getInt("status")));
+                out.add(new Ripetizione(rs.getInt("id"), p, c, rs.getString("data"), rs.getString("ora"),rs.getInt("idutente"), "15:00",rs.getInt("status")));
             }
 
 
