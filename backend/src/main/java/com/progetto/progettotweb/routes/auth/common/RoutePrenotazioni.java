@@ -18,13 +18,6 @@ public class RoutePrenotazioni  extends HttpServlet{
 
     private final RipetizioneController ripetizioneController = new RipetizioneController();
 
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException,IOException{
-        PrintWriter writer = response.getWriter();
-        ArrayList<Ripetizione> ripetizioni = ripetizioneController.queryDBRipetizioniDisponibili();
-        response.setStatus(HttpServletResponse.SC_OK);
-        writer.write(ResponseToJson.toJsonMessage("success","Ricerca ripetizioni disponibili", ripetizioni));
-        writer.close();
-    }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws  ServletException, IOException{
 

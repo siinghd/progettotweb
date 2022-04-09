@@ -51,8 +51,7 @@ const routes = [
     name: "Bookings",
     component: Bookings,
     meta: {
-      auth: true,
-      role: [1, 2],
+      auth: false,
     },
   },
   {
@@ -140,7 +139,7 @@ router.beforeEach((to, from, next) => {
       } */
     }
   } else {
-    if (to.path !== "/" && to.path !== "/register") {
+    if (to.path !== "/" && to.path !== "/register" && to.path !== "/auth/common/bookings") {
       next("/");
     } else {
       next();

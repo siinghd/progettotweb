@@ -63,6 +63,12 @@
               >Registrazione</router-link
             >
           </div>
+          <div class="px-1 mt-4">
+            <router-link
+            class="hover:text-blue-900"
+            to="/auth/common/bookings"
+            >Accedi come Ospite</router-link>
+          </div>
         </div>
       </form>
     </div>

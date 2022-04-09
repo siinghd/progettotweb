@@ -96,7 +96,7 @@ const { isLoading, isError, data, error, refetch } = useQuery(
 );
 
 const handleOnPrenotaSubmit = async (idripetizione, action, refetch) => {
-  console.log(idripetizione, action);
+  
   const res = await genericUpdate(
     `${process.env.VUE_APP_BACKEND_URL}/api/auth/common/prenotazionieffettuate?idripetizione=${idripetizione}&statuschange=${action}`
   );

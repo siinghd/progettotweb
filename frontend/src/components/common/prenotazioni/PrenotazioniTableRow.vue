@@ -13,7 +13,7 @@
     <td class="px-6 py-4">{{ dayjs(props.data).format("DD-MM-YYYY") }}</td>
     <td class="px-6 py-4">{{ props.ora }}</td>
     <td class="px-6 py-4">
-      <Button
+      <Button 
         :title="'Prenota'"
         :submitEvent="'prenotaClicked'"
         @prenotaClicked="

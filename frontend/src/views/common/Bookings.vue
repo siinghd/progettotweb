@@ -55,13 +55,17 @@ import TableRow from "../../components/common/prenotazioni/PrenotazioniTableRow"
 import { createToast } from "mosha-vue-toastify";
 import { useCookies } from "vue3-cookies";
 import UserLayoutVue from "../../layouts/UserLayout.vue";
+import OspiteLayoutVue from "../../layouts/OspiteLayout.vue";
+import {useRouter} from "vue-router"
+
+const router = useRouter();
 
 const cookie = useCookies().cookies.get("servletrole");
 
 const emit = defineEmits(["update:layout"]);
 emit(
   "update:layout",
-  shallowRef(parseInt(cookie, 10) === 2 ? AdminLayoutVue : UserLayoutVue)
+  shallowRef(parseInt(cookie, 10) === 2 ? AdminLayoutVue : parseInt(cookie, 10) === 1 ? UserLayoutVue : OspiteLayoutVue)
 );
 
 const currentPage = ref(1);
@@ -71,7 +75,7 @@ const { isLoading, isError, data, error, refetch } = useQuery(
   ["getPrenotazioniDisponibili"],
   () =>
     genericGet(
-      `${process.env.VUE_APP_BACKEND_URL}/api/auth/common/prenotazionidisponibili?currentpage=${currentPage.value}&limit=${limit}`
+      `${process.env.VUE_APP_BACKEND_URL}/api/getprenotazionidisponibili?currentpage=${currentPage.value}&limit=${limit}`
     )
 );
 
@@ -82,8 +86,12 @@ const handleOnPrenotaSubmit = async (
   data,
   refetch
 ) => {
+  if(!cookie){
+    router.push("/")
+    return
+  }
   const res = await genericPost(
-    `${process.env.VUE_APP_BACKEND_URL}/api/auth/common/prenotazionidisponibili`,
+    `${process.env.VUE_APP_BACKEND_URL}/api/auth/common/getprenotazionidisponibili`,
     `idcorso=${idcorso}&iddocente=${iddocente}&status=${1}&data=${data}&ora=${ora}`
   );
   if (res.status === "success") {
