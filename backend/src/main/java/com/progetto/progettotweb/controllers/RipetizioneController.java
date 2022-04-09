@@ -176,7 +176,7 @@ public class RipetizioneController {
         }
         return out;
     }
-    public ArrayList<Ripetizione> queryDBRipetizioniByIdDateTime(int id, String date, String time) {
+    public ArrayList<Ripetizione> queryDBRipetizioniByIdUserAndIdDocDateTime(int id,int iddoc, String date, String time) {
         ArrayList<Ripetizione> out = new ArrayList<>();
 
 
@@ -186,7 +186,7 @@ public class RipetizioneController {
             ResultSet rs = st.executeQuery("SELECT r.id , r.id , r.iddocente , r.idcorso as cid , r.data , r.ora , r.status , r.idutente , c.titolo , d.nome , d.cognome , d.softdelete , c.softdelete from ripetizione as r " +
                     " JOIN corso as c ON r.idcorso = c.id" +
                     " JOIN docente as d ON r.iddocente = d.id" +
-                    " WHERE r.idutente = " + id + " AND r.data = '"+date+"' AND ora='"+time+"'");
+                    " WHERE (r.idutente = " + id + " OR r.iddocente = "+iddoc+") AND r.data = '"+date+"' AND ora='"+time+"'");
             while (rs.next()) {
                 Docente p = new Docente(rs.getInt("iddocente"), rs.getString("nome"),
                         rs.getString("cognome"), rs.getInt("softdelete"));

@@ -58,10 +58,11 @@ public class RoutePrenotazioni  extends HttpServlet{
             printWriter.close();
             return;
         }
-        ArrayList<Ripetizione> ripetizioniPerLaStessData = ripetizioneController.queryDBRipetizioniByIdDateTime(idUtente,data,ora);
+        ArrayList<Ripetizione> ripetizioniPerLaStessData = ripetizioneController.queryDBRipetizioniByIdUserAndIdDocDateTime(idUtente,idDocente,data,ora);
         if(ripetizioniPerLaStessData.size()>0){
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            printWriter.write(ResponseToJson.toJsonMessage("fail","Hai ga una prenotazione per questa data e alla stessa ora"));
+            printWriter.write(ResponseToJson.toJsonMessage("fail","La prenotazione non puo essere effettuta per la data e ora selezionata," +
+                    "hai gia prenotato per questa data o il docente e gia stato prenotato!"));
             return;
         }
         Ripetizione ripetizione = new Ripetizione(idDocente, idCorso, idUtente, data, ora, status );
