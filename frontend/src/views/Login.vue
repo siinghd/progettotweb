@@ -64,10 +64,9 @@
             >
           </div>
           <div class="px-1 mt-4">
-            <router-link
-            class="hover:text-blue-900"
-            to="/common/bookings"
-            >Accedi come Ospite</router-link>
+            <router-link class="hover:text-blue-900" to="/common/bookings"
+              >Accedi come Ospite</router-link
+            >
           </div>
         </div>
       </form>

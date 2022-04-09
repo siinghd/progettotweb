@@ -56,7 +56,7 @@ import { createToast } from "mosha-vue-toastify";
 import { useCookies } from "vue3-cookies";
 import UserLayoutVue from "../../layouts/UserLayout.vue";
 import OspiteLayoutVue from "../../layouts/OspiteLayout.vue";
-import {useRouter} from "vue-router"
+import { useRouter } from "vue-router";
 
 const router = useRouter();
 
@@ -65,7 +65,13 @@ const cookie = useCookies().cookies.get("servletrole");
 const emit = defineEmits(["update:layout"]);
 emit(
   "update:layout",
-  shallowRef(parseInt(cookie, 10) === 2 ? AdminLayoutVue : parseInt(cookie, 10) === 1 ? UserLayoutVue : OspiteLayoutVue)
+  shallowRef(
+    parseInt(cookie, 10) === 2
+      ? AdminLayoutVue
+      : parseInt(cookie, 10) === 1
+      ? UserLayoutVue
+      : OspiteLayoutVue
+  )
 );
 
 const currentPage = ref(1);
@@ -86,9 +92,9 @@ const handleOnPrenotaSubmit = async (
   data,
   refetch
 ) => {
-  if(!cookie){
-    router.push("/")
-    return
+  if (!cookie) {
+    router.push("/");
+    return;
   }
   const res = await genericPost(
     `${process.env.VUE_APP_BACKEND_URL}/api/auth/common/prenotazionidisponibili`,
