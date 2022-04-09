@@ -1,9 +1,9 @@
 <template>
   <div class="Container">
+    <Loading v-if="isLoading" />
     <div
       class="relative overflow-x-auto shadow-md sm:rounded-lg w-full m-auto mt-9"
     >
-      <Loading v-if="isLoading" />
       <h3 class="text-center" v-if="isError">{{ error }}</h3>
       <table
         class="w-full text-sm text-left text-gray-500 dark:text-gray-400"
@@ -13,81 +13,75 @@
           class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400 text-center"
         >
           <tr>
+            <th scope="col" class="px-6 py-3">Utente</th>
             <th scope="col" class="px-6 py-3">Nome docente</th>
             <th scope="col" class="px-6 py-3">Cognome docente</th>
             <th scope="col" class="px-6 py-3">Titolo Corso</th>
             <th scope="col" class="px-6 py-3">Data</th>
-            <th scope="col" class="px-6 py-3">Ora</th>
-            <th scope="col" class="px-6 py-3">
-              <span class="sr-only">Disdici</span>
-            </th>
+            <th scope="col" class="px-6 py-3">ora</th>
+            <th scope="col" class="px-6 py-3">Stato</th>
           </tr>
         </thead>
         <tbody>
-          <TableRow
+          <PrenotazioniEffettuateTableRow
             v-for="item in data.data"
             :key="item.doc.id + item.corso.id + item.date + item.actualTime"
+            :idripetizione="item.id"
             :iddocente="item.doc.id"
             :data="item.date"
             :status="item.status"
-            :ora="item.actualTime"
+            :ora="item.time"
             :name="item.doc.nome"
             :lastname="item.doc.cognome"
             :idcorso="item.corso.id"
             :titolo="item.corso.titolo"
-            :submitDisdiciEvent="'handleOnSubmit'"
-            @handleOnSubmit="
-              (idcorso, iddocente, ora, data) =>
-                handleOnPrenotaSubmit(idcorso, iddocente, ora, data, refetch)
-            "
+            :accountname="item.utente.accountname"
           />
         </tbody>
       </table>
-    </div>  
+      <Pagination
+        v-if="!isLoading && !isError"
+        :dataLength="data.data.length"
+        :currPage="currentPage"
+        :limit="limit"
+        @nextPage="
+          () => {
+            currentPage = currentPage + 1;
+            refetch();
+          }
+        "
+        @prevPage="
+          () => {
+            currentPage = currentPage - 1;
+            refetch();
+          }
+        "
+      />
+    </div>
   </div>
 </template>
 
 <script setup>
-import { defineEmits, shallowRef } from "vue";
+import { defineEmits, shallowRef, ref } from "vue";
 import AdminLayoutVue from "../../layouts/AdminLayout.vue";
 import { useQuery } from "vue-query";
-import { genericGet, genericPost } from "../../utilities/requests";
-import TableRow from "../../components/admin/PrenotazioniEffettuate/PrenotazioniEffettuateTableRow.vue";
-import {createToast} from "mosha-vue-toastify";
+import { genericGet } from "../../utilities/requests";
+import PrenotazioniEffettuateTableRow from "../../components/admin/prenotazioniEffettuateAll/PrenotazioniEffettuateAllTableRow.vue";
+import Pagination from "../../components/Pagination.vue";
 
 const emit = defineEmits(["update:layout"]);
 emit("update:layout", shallowRef(AdminLayoutVue));
 
-
+const currentPage = ref(0);
+const limit = 10;
 
 const { isLoading, isError, data, error, refetch } = useQuery(
-  ["getPrenotazioniEffettuate"],
+  ["getPrenotazioniEffettuateAll"],
   () =>
     genericGet(
-      `${process.env.VUE_APP_BACKEND_URL}/api/auth/admin/prenotazionieffettuate`
+      `${process.env.VUE_APP_BACKEND_URL}/api/auth/admin/prenotazioniall?currentpage=${currentPage.value}&limit=${limit}`
     )
 );
-
-const handleOnPrenotaSubmit = async (
-  idcorso,
-  iddocente,
-  ora,
-  data,
-  refetch
-) => {
-  const res = await genericPost(
-    `${process.env.VUE_APP_BACKEND_URL}/api/auth/admin/prenotazionidisponibili`,
-    `idcorso=${idcorso}&iddocente=${iddocente}&status=${1}&data=${data}&ora=${ora}`
-  );
-  if (res.status === "success") {
-    createToast(res.message, { type: "success" });
-    refetch();
-  } else {
-    createToast(res.message, { type: "danger" });
-  }
-}
-
-
 </script>
 
 <style scoped></style>

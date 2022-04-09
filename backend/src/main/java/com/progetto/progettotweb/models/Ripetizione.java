@@ -15,6 +15,7 @@ public class Ripetizione {
     private  String time = null;
     private int status = 1;
     private int idutente = -1;
+    private Utente utente= null;
     public Ripetizione() {}
     public Ripetizione(int id , Docente doc, Corso corso, String date, String time,String actualTime,int status) {
         this.id = id;
@@ -67,6 +68,14 @@ public class Ripetizione {
 
     public void setDoc(Docente doc) {
         this.doc = doc;
+    }
+
+    public Utente getUtente() {
+        return utente;
+    }
+
+    public void setUtente(Utente utente) {
+        this.utente = utente;
     }
 
     public Corso getCorso() {
@@ -131,6 +140,7 @@ public class Ripetizione {
     public void setActualTime(String actualTime) {
         this.actualTime = actualTime;
     }
+
     @Override
     public String toString() {
         return "Ripetizione{" +

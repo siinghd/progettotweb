@@ -1,4 +1,4 @@
-package com.progetto.progettotweb.routes.auth.admin;
+package com.progetto.progettotweb.routes.auth.common;
 import com.google.gson.Gson;
 import com.progetto.progettotweb.controllers.RipetizioneController;
 import com.progetto.progettotweb.models.Docente;
@@ -13,7 +13,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 
-@WebServlet(name = "prenotazionidisponibili", value = "/api/auth/admin/prenotazionidisponibili")
+@WebServlet(name = "prenotazionidisponibili", value = "/api/auth/common/prenotazionidisponibili")
 public class RoutePrenotazioni  extends HttpServlet{
 
     private final RipetizioneController ripetizioneController = new RipetizioneController();
@@ -58,7 +58,12 @@ public class RoutePrenotazioni  extends HttpServlet{
             printWriter.close();
             return;
         }
-
+        ArrayList<Ripetizione> ripetizioniPerLaStessData = ripetizioneController.queryDBRipetizioniByIdDateTime(idUtente,data,ora);
+        if(ripetizioniPerLaStessData.size()>0){
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            printWriter.write(ResponseToJson.toJsonMessage("fail","Hai ga una prenotazione per questa data e alla stessa ora"));
+            return;
+        }
         Ripetizione ripetizione = new Ripetizione(idDocente, idCorso, idUtente, data, ora, status );
         String value = ripetizioneController.insertRipetizione(ripetizione);
 

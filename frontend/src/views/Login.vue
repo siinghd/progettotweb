@@ -74,7 +74,7 @@ import { genericPost } from "../utilities/requests";
 export default {
   data() {
     return {
-      email: "test@tester.com",
+      email: "sdhsdhasfsaf@unito.it",
       password: "123456",
       loading: false,
     };
@@ -95,11 +95,7 @@ export default {
         } else {
           this.$moshaToast(res.message, { type: "success" });
           this.$cookies.set("servletrole", res.data[0].ruolo);
-          if (res.data[0].ruolo === 3) {
-            this.$router.push("/auth/admin");
-          } else {
-            this.$router.push("/auth/user");
-          }
+          this.$router.push("/auth/common/bookings");
         }
       });
     },

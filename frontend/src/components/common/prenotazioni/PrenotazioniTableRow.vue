@@ -10,7 +10,7 @@
     </th>
     <td class="px-6 py-4">{{ props.lastname }}</td>
     <td class="px-6 py-4">{{ props.titolo }}</td>
-    <td class="px-6 py-4">{{ props.data }}</td>
+    <td class="px-6 py-4">{{ dayjs(props.data).format("DD-MM-YYYY") }}</td>
     <td class="px-6 py-4">{{ props.ora }}</td>
     <td class="px-6 py-4">
       <Button
@@ -27,7 +27,7 @@
 <script setup>
 import { defineProps } from "vue";
 import Button from "../../Button.vue";
-
+import dayjs from "dayjs";
 const props = defineProps({
   idcorso: Number,
   iddocente: Number,

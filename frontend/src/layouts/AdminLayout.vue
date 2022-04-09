@@ -63,17 +63,23 @@
             <div class="hidden sm:block sm:ml-6">
               <div class="flex space-x-4">
                 <router-link
-                  to="/auth/admin/bookings"
+                  to="/auth/common/bookings"
                   class="text-white px-3 py-2 rounded-md text-sm font-medium"
                   aria-current="page"
                   >Prenotazioni Disponibili</router-link
                 >
 
                 <router-link
-                  to="/auth/admin/PrenotazioniEffettuate"
+                  to="/auth/common/prenotazionieffettuate"
                   class="text-white px-3 py-2 rounded-md text-sm font-medium"
                   aria-current="page"
                   >Prenotazioni Effettuate</router-link
+                >
+                <router-link
+                  to="/auth/admin/allbookings"
+                  class="text-white px-3 py-2 rounded-md text-sm font-medium"
+                  aria-current="page"
+                  >Tutte le prentazioni effettuate</router-link
                 >
 
                 <router-link
@@ -115,17 +121,23 @@
       >
         <div class="px-2 pt-2 pb-3 space-y-1">
           <router-link
-            to="/auth/admin/bookings"
+            to="/auth/common/bookings"
             class="text-white block px-3 py-2 rounded-md text-base font-medium"
             aria-current="page"
             >Prenotazioni Disponibili</router-link
           >
 
           <router-link
-            to="/auth/admin/PrenotazioniEffettuate"
+            to="/auth/common/prenotazionieffettuate"
             class="text-white block px-3 py-2 rounded-md text-base font-medium"
             aria-current="page"
             >Prenotazioni Effettuate</router-link
+          >
+          <router-link
+            to="/auth/admin/allbookings"
+            class="text-white block px-3 py-2 rounded-md text-base font-medium"
+            aria-current="page"
+            >Tutte le prentazioni effettuate</router-link
           >
 
           <router-link

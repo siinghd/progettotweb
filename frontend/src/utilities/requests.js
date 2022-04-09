@@ -39,7 +39,6 @@ const genericUpdate = async (url, data) => {
     Accept: "application/json",
     "Content-Type": "application/x-www-form-urlencoded",
   };
-
   return fetch(url, {
     method: "PUT",
     body: data,
