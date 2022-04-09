@@ -66,7 +66,7 @@
           <div class="px-1 mt-4">
             <router-link
             class="hover:text-blue-900"
-            to="/auth/common/bookings"
+            to="/common/bookings"
             >Accedi come Ospite</router-link>
           </div>
         </div>
@@ -101,7 +101,7 @@ export default {
         } else {
           this.$moshaToast(res.message, { type: "success" });
           this.$cookies.set("servletrole", res.data[0].ruolo);
-          this.$router.push("/auth/common/bookings");
+          this.$router.push("/common/bookings");
         }
       });
     },

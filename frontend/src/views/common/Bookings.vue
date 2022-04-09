@@ -91,7 +91,7 @@ const handleOnPrenotaSubmit = async (
     return
   }
   const res = await genericPost(
-    `${process.env.VUE_APP_BACKEND_URL}/api/auth/common/getprenotazionidisponibili`,
+    `${process.env.VUE_APP_BACKEND_URL}/api/auth/common/prenotazionidisponibili`,
     `idcorso=${idcorso}&iddocente=${iddocente}&status=${1}&data=${data}&ora=${ora}`
   );
   if (res.status === "success") {
