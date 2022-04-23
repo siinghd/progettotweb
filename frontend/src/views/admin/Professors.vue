@@ -113,10 +113,10 @@ const lastname = ref("");
 //functions
 
 //prefecth
-const { isLoading, isError, data, error, refetch } = useQuery(
-  ["getProfessors"],
-  () => genericGet(`${process.env.VUE_APP_BACKEND_URL}/api/auth/admin/docente`)
-);
+  const { isLoading, isError, data, error, refetch } = useQuery(
+    ["getProfessors"],
+    () => genericGet(`${process.env.VUE_APP_BACKEND_URL}/api/auth/admin/docente`)
+  );
 
 //handlesubmit
 const handleButtonSubmit = async (refetchf) => {

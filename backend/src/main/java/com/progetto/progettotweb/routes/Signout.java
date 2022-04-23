@@ -19,6 +19,7 @@ public class Signout extends HttpServlet {
         PrintWriter printWriter = response.getWriter();
         response.setContentType("application/json");
         request.getSession().invalidate();
+        response.setStatus(HttpServletResponse.SC_OK);
         printWriter.write("{\"status\":\"success\", \"message\":\"Signout avvenuto con successo.\"}");
         printWriter.close();
     }
