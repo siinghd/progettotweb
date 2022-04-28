@@ -10,6 +10,7 @@ import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
 class CommonBookings extends HookWidget {
   const CommonBookings({Key? key}) : super(key: key);
+
   final limit = 10;
 
   @override
@@ -18,21 +19,27 @@ class CommonBookings extends HookWidget {
     final isLoading = useState(false);
     final topContainer = useState(0.0);
     final topContainerIndex = useState(0);
+    final selectedSubject = useState('Seleziona Materia');
     final itemsData = useState([]);
+    final itemsDataFiltered = useState([]);
+    final itemsDataSubject = useState([]);
+
     ItemScrollController controller = ItemScrollController();
     ItemPositionsListener itemPositionsListener =
         ItemPositionsListener.create();
     final forceRerender = useState(false);
     final Size size = MediaQuery.of(context).size;
     void controllerCallBack() {
-      topContainer.value =
+      if(itemPositionsListener.itemPositions.value.isNotEmpty) {
+ topContainer.value =
           itemPositionsListener.itemPositions.value.first.itemTrailingEdge;
       topContainerIndex.value =
           itemPositionsListener.itemPositions.value.first.index;
+      }
+     
     }
 
     void bookMeNow(index, iddocente, idcorso, data, ora) async {
-      
       var res = await GenericRequests.genericPost(
           '/auth/common/prenotazionidisponibili', {
         'idcorso': idcorso,
@@ -71,13 +78,17 @@ class CommonBookings extends HookWidget {
 
     final getDataAndRender = useMemoized(
       () => () async {
-        List<Widget> listItems = [];
+        List<String> listItemsSubject = [];
         isLoading.value = true;
         var res = await GenericRequests.genericGet(
             '/getprenotazionidisponibili?currentpage=${currentPage.value}&limit=$limit');
+
+        var resSubject =
+            await GenericRequests.genericGet('/auth/common/getsubjects');
+
         isLoading.value = false;
 
-        if (res['status'] == 'fail') {
+        if (res['status'] == 'fail' || resSubject['status'] == 'fail') {
           if (res['error'] != null && res['error'] == 'LOGINREQUIRED') {
             logoutUserClient(context);
           } else {
@@ -90,7 +101,19 @@ class CommonBookings extends HookWidget {
           }
           return;
         }
-        res['data'].asMap().forEach((index, item) {
+        resSubject['data'].asMap().forEach((index, item) {
+          listItemsSubject.add(item['titolo']);
+        });
+
+        itemsData.value = res['data'];
+        itemsDataSubject.value = listItemsSubject;
+      },
+      [],
+    );
+    useEffect(() {
+      List<Widget> listItems = [];
+      if (selectedSubject.value == 'Seleziona Materia') {
+        itemsData.value.asMap().forEach((index, item) {
           listItems.add(BookingCard(
               index,
               item['doc']['id'],
@@ -104,11 +127,27 @@ class CommonBookings extends HookWidget {
               item['corso']['titolo'],
               key: UniqueKey()));
         });
-        itemsData.value = listItems;
-      },
-      [],
-    );
+      } else {
+        itemsData.value.asMap().forEach((index, item) {
+          if (item['corso']['titolo'] == selectedSubject.value) {
+            listItems.add(BookingCard(
+                index,
+                item['doc']['id'],
+                (index, iddocente, idcorso, ora, data) =>
+                    bookMeNow(index, iddocente, idcorso, data, ora),
+                item['date'],
+                item['actualTime'],
+                item['doc']['nome'],
+                item['doc']['cognome'],
+                item['corso']['id'],
+                item['corso']['titolo'],
+                key: UniqueKey()));
+          }
+        });
+      }
 
+      itemsDataFiltered.value = listItems;
+    }, [selectedSubject.value, itemsData.value]);
     useEffect(() {
       getDataAndRender();
       return null;
@@ -122,44 +161,76 @@ class CommonBookings extends HookWidget {
     return SafeArea(
       child: Scaffold(
           appBar: appBarMain(context, 'Prenotazioni disponibili'),
-          body:  SizedBox(
-                  height: size.height -
-                      kToolbarHeight - // top AppBar height
-                      MediaQuery.of(context).padding.top - // top padding
-                      kBottomNavigationBarHeight,
-                  child: Column(children: <Widget>[
-                    Expanded(
-                        child: ScrollablePositionedList.builder(
-                            itemScrollController: controller,
-                            itemCount: itemsData.value.length,
-                            itemPositionsListener: itemPositionsListener,
-                            physics: const BouncingScrollPhysics(),
-                            itemBuilder: (context, index) {
-                              double scale = 1.0;
-                              if (topContainer.value < 0.30 &&
-                                  topContainerIndex.value == index) {
-                                scale = 0.5 + topContainer.value;
-                                if (scale < 0) {
-                                  scale = 0;
-                                } else if (scale > 1) {
-                                  scale = 1;
-                                }
-                              }
-                              return Opacity(
-                                opacity: scale,
-                                child: Transform(
-                                  transform: Matrix4.identity()
-                                    ..scale(scale, scale),
-                                  alignment: Alignment.bottomCenter,
-                                  child: Align(
-                                      heightFactor: 1,
-                                      alignment: Alignment.center,
-                                      child: itemsData.value[index]),
-                                ),
-                              );
-                            })),
-                  ]),
-                )),
+          body: SizedBox(
+            height: size.height -
+                kToolbarHeight - // top AppBar height
+                MediaQuery.of(context).padding.top - // top padding
+                kBottomNavigationBarHeight,
+            child: Column(children: <Widget>[
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text('Filtra per: ', style: TextStyle(fontSize: 20)),
+                  const SizedBox(
+                    width: 10,
+                  ),
+                  DropdownButton<String>(
+                    value: selectedSubject.value,
+                    icon: const Icon(Icons.arrow_downward),
+                    elevation: 20,
+                    style:
+                        const TextStyle(color: Colors.deepPurple, fontSize: 20),
+                    underline: Container(
+                      height: 2,
+                      color: Colors.deepPurpleAccent,
+                    ),
+                    onChanged: (String? newValue) {
+                      selectedSubject.value = newValue!;
+                    },
+                    items: <String>[
+                      "Seleziona Materia",
+                      ...itemsDataSubject.value
+                    ].map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
+                  ),
+                ],
+              ),
+              Expanded(
+                  child: ScrollablePositionedList.builder(
+                      itemScrollController: controller,
+                      itemCount: itemsDataFiltered.value.length,
+                      itemPositionsListener: itemPositionsListener,
+                      physics: const BouncingScrollPhysics(),
+                      itemBuilder: (context, index) {
+                        double scale = 1.0;
+                        if (topContainer.value < 0.30 &&
+                            topContainerIndex.value == index) {
+                          scale = 0.5 + topContainer.value;
+                          if (scale < 0) {
+                            scale = 0;
+                          } else if (scale > 1) {
+                            scale = 1;
+                          }
+                        }
+
+                        return Opacity(
+                          opacity: scale,
+                          child: Transform(
+                            transform: Matrix4.identity()..scale(scale, scale),
+                            alignment: Alignment.bottomCenter,
+                            child: Align(
+                                heightFactor: 1,
+                                alignment: Alignment.center,
+                                child: itemsDataFiltered.value[index]),
+                          ),
+                        );
+                      })),
+            ]),
+          )),
     );
   }
 }
